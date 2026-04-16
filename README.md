@@ -1,16 +1,67 @@
-# React + Vite
+# Intelligent Resume Screening and Job Matching
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project now includes:
+- A Vite + React frontend
+- A Node.js + Express backend for resume screening
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+cp .env.example .env
+```
 
-## React Compiler
+If you want AI insights with Gemini, set `GEMINI_API_KEY` in `.env`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Run
 
-## Expanding the ESLint configuration
+- Frontend only: `npm run dev`
+- Backend only: `npm run server`
+- Frontend + backend together: `npm run dev:full`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Backend default URL: `http://localhost:5000`
+
+## Backend API
+
+### Health check
+
+`GET /api/health`
+
+Response:
+
+```json
+{
+  "status": "ok",
+  "service": "resume-screening-backend"
+}
+```
+
+### Resume screening
+
+`POST /api/screen` (multipart/form-data)
+
+Fields:
+- `jobTitle` (optional)
+- `jobDescription` (required)
+- `useGemini` (`true` or `false`, optional)
+- `resumes` (required, up to 50 files: PDF, DOCX, TXT)
+
+Response:
+
+```json
+{
+  "jobTitle": "Senior Frontend Engineer",
+  "totalCandidates": 2,
+  "topCandidates": [
+    {
+      "name": "Candidate Name",
+      "score": 88,
+      "match": "High Match",
+      "experience": "5 years",
+      "matchedSkills": ["react", "javascript"],
+      "missingSkills": ["typescript"],
+      "resumePreview": "..."
+    }
+  ]
+}
+```
