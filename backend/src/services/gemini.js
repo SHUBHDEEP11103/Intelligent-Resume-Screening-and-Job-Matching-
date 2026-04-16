@@ -1,5 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+const DEFAULT_GEMINI_MODEL = 'gemini-1.5-flash';
+
 const getGeminiClient = () => {
   if (!process.env.GEMINI_API_KEY) {
     return null;
@@ -13,7 +15,9 @@ const enrichCandidatesWithGemini = async ({ jobTitle, jobDescription, candidates
     return candidates;
   }
 
-  const model = client.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-1.5-flash' });
+  const model = client.getGenerativeModel({
+    model: process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL,
+  });
 
   const enhancedCandidates = await Promise.all(
     candidates.map(async (candidate) => {
